@@ -2,7 +2,7 @@
     "manifest_version": 2,
     "name": "OGNPploho",
     "version": "1.0",
-    "description": "Can refresh the page and notify you when the choices are available",
+    "description": "Can refresh the page and notify you when choices are available",
     "icons": {
         "48": "ISUBRUH_48.PNG"
     },
