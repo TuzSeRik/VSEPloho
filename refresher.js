@@ -1,4 +1,4 @@
-let startupDelay = 2500;
+let startupDelay = 1000;
 let refreshDelay = 20*1000;
 
 setTimeout(main, startupDelay);
@@ -41,13 +41,13 @@ function main()
             {
                 setAfterLogin(2);
                 console.log("redirecting...");
-                location = getWatchPageText().page;
+                location = getWatchPage().page;
             }
             else if (isAfterLogin() == 2)
             {
                 setAfterLogin(0);
                 console.log("");
-                setWatchSettings(pageLink, getWatchPageText().text);
+                setWatchSettings(pageLink, getWatchPage().text);
                 refreshPage();
             }
             else if (isThisPageOnAWatchlist(pageLink))
@@ -88,7 +88,7 @@ function setWatchSettings(page, text)
 {
     let wp = new PageWatchpoint(page, text);
 
-    setWatchPageText(wp);
+    setWatchPage(wp);
 }
 
 function isLoginPage(page)
@@ -98,19 +98,20 @@ function isLoginPage(page)
 
 function isThisPageOnAWatchlist(page)
 {
-    let wp = getWatchPageText();
+    let wp = getWatchPage();
     return (wp == null) ? false : wp.page == page;
 }
 
 function isAnythingOnAWatchlist()
 {
-    let wp = getWatchPageText();
+    let wp = getWatchPage();
+    console.log(1);
     return wp != null;
 }
 
 function isPageChanged(text)
 {
-    let wp = getWatchPageText();
+    let wp = getWatchPage();
     if (wp != null)
     {
         console.log(text);
@@ -131,15 +132,16 @@ function refreshPage()
     location.reload();
 }
 
-function getWatchPageText()
+function getWatchPage()
 {
-    let watchlistRaw = sessionStorage.getItem("ISUwatchpage");
-    return ((watchlistRaw == null) || (watchlistRaw == undefined)) ? null : watchlistRaw;
+    let watchPage = sessionStorage.getItem("ISUwatchpage");
+    console.log(watchPage);
+    return ((watchPage == null) || (watchPage == undefined)) ? null : JSON.parse(watchPage);
 }
 
-function setWatchPageText(jsonText)
+function setWatchPage(watchPage)
 {
-    sessionStorage.setItem("ISUwatchpage", jsonText);
+    sessionStorage.setItem("ISUwatchpage", JSON.stringify(watchPage));
 }
 
 function isAfterLogin()
