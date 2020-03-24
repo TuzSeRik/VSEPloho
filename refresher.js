@@ -1,3 +1,11 @@
+let startupDelay = 2500;
+let refreshDelay = 20*1000;
+
+setTimeout(main, startupDelay);
+
+
+//----------//
+
 class PageWatchpoint {
     constructor(page, text)
     {
@@ -73,7 +81,7 @@ function main()
         if (toRefreshPage)
         {
             console.log("Gonna refresh soon...");
-            setTimeout(refreshPage, 60000);
+            setTimeout(refreshPage, refreshDelay - startupDelay);
         }
     }
 }
@@ -150,9 +158,3 @@ function setAfterLogin(al)
     console.log("setting afterLogin to " + al);
     sessionStorage.setItem("afterLogin", al);
 }
-
-
-
-//----------//
-
-setTimeout(main, 2500);
