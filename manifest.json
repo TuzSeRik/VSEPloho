@@ -3,6 +3,7 @@
     "name": "OGNPploho",
     "version": "1.0",
     "description": "Can refresh the page and notify you when choices are available",
+    "homepage_url": "https://github.com/WerDei/OGNPloho",
     "icons": {
         "48": "ISUBRUH_48.PNG"
     },
