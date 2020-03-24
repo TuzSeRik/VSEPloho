@@ -16,6 +16,10 @@ class PageWatchpoint {
 
 function main()
 {
+    var audio = new Audio(browser.extension.getURL("audio/alert.mp3"));
+    console.log(browser.extension.getURL("audio/alert.mp3"));
+
+
     console.log("launching the watcher");
     let pageLink = window.location.href;
     
@@ -41,27 +45,25 @@ function main()
             {
                 setAfterLogin(2);
                 console.log("redirecting...");
-                location = getWatchlistJson().page;
+                location = getWatchPageText().page;
             }
             else if (isAfterLogin() == 2)
             {
                 setAfterLogin(0);
                 console.log("");
-                setWatchSettings(pageLink, getWatchlistJson().text);
+                setWatchSettings(pageLink, getWatchPageText().text);
                 refreshPage();
             }
             else if (isThisPageOnAWatchlist(pageLink))
             {
-                console.log("this page is on a watchlist!");
                 toRefreshPage = true;
                 watchElement.style.border = "2px solid green";
 
                 if (isPageChanged(watchElement.innerHTML))
                 {
-                    console.log("The page has changed!");
                     watchElement.style.border = "10px solid red";
 
-                    var audio = new Audio('https://se.ifmo.ru/~s270245/alert.mp3');
+                    var audio = new Audio('audio/alert.mp3');
                     audio.play();
 
                     toRefreshPage = true;
@@ -69,7 +71,7 @@ function main()
             }
             else
             { 
-                let watch = confirm("Watch for a changes on this page?");
+                let watch = confirm("Watch for changes on this page?");
                 if (watch) 
                 {
                     toRefreshPage = true;
@@ -90,30 +92,29 @@ function setWatchSettings(page, text)
 {
     let wp = new PageWatchpoint(page, text);
 
-    setWatchlistJson(wp);
+    setWatchPageText(wp);
 }
 
 function isLoginPage(page)
 {
-    console.log(page);
     return page.includes(":LOGIN:");
 }
 
 function isThisPageOnAWatchlist(page)
 {
-    let wp = getWatchlistJson();
+    let wp = getWatchPageText();
     return (wp == null) ? false : wp.page == page;
 }
 
 function isAnythingOnAWatchlist()
 {
-    let wp = getWatchlistJson();
+    let wp = getWatchPageText();
     return wp != null;
 }
 
 function isPageChanged(text)
 {
-    let wp = getWatchlistJson();
+    let wp = getWatchPageText();
     if (wp != null)
     {
         console.log(text);
@@ -131,19 +132,18 @@ function removeRandomValues(text)
 
 function refreshPage()
 {
-    console.log("refreshing...");
     location.reload();
 }
 
-function getWatchlistJson()
+function getWatchPageText()
 {
-    let watchlistRaw = sessionStorage.getItem("ISUwatchlist");
-    return ((watchlistRaw == null) || (watchlistRaw == undefined)) ? null : JSON.parse(watchlistRaw);
+    let watchlistRaw = sessionStorage.getItem("ISUwatchpage");
+    return ((watchlistRaw == null) || (watchlistRaw == undefined)) ? null : watchlistRaw;
 }
 
-function setWatchlistJson(jsonText)
+function setWatchPageText(jsonText)
 {
-    sessionStorage.setItem("ISUwatchlist", JSON.stringify(jsonText));
+    sessionStorage.setItem("ISUwatchpage", jsonText);
 }
 
 function isAfterLogin()

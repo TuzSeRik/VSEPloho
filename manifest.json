@@ -16,5 +16,8 @@
                 "refresher.js"
             ]
         }
+    ],
+    "web_accessible_resources": [
+        "audio/alert.mp3"
     ]
 }
