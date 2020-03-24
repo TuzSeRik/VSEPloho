@@ -16,10 +16,6 @@ class PageWatchpoint {
 
 function main()
 {
-    var audio = new Audio(browser.extension.getURL("audio/alert.mp3"));
-    console.log(browser.extension.getURL("audio/alert.mp3"));
-
-
     console.log("launching the watcher");
     let pageLink = window.location.href;
     
@@ -63,7 +59,7 @@ function main()
                 {
                     watchElement.style.border = "10px solid red";
 
-                    var audio = new Audio('audio/alert.mp3');
+                    var audio = new Audio(browser.extension.getURL("audio/alert.mp3"));
                     audio.play();
 
                     toRefreshPage = true;
