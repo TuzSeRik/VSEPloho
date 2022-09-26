@@ -10,7 +10,7 @@
     "content_scripts": [
         {
             "matches": [
-                "*://isu.ifmo.ru/pls/apex/*"
+                "*://www.aviasales.ru/search/*"
             ],
             "js": [
                 "refresher.js"

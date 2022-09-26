@@ -1,91 +1,61 @@
-//----------//
+// Main constant, defines what price we will look for
+let CHOSEN_PRICE = 50000;
 
-let CHOSEN_PRICE = 500000;
+// Reload
+let STARTUP_DELAY = 15000;
+let AWAIT_TIME = 60000;
 
-//----------//
-
-let startupDelay = 1000;
-let refreshDelay = 20*1000;
-
-setTimeout(main, startupDelay);
-
+// Used functions
 class PageWatchpoint {
-    constructor(page, text)
-    {
+    constructor(page, text) {
         this.page = page;
         this.text = text;
     }
 }
 
-function main()
-{
-    console.log("launching the watcher");
-    let pageLink = window.location.href;
-    
-    let toRefreshPage = false;
-
-    let watchElement = document.getElementsByClassName("price_85d2b9c")[0];
-    
-    if (isThisPageOnAWatchlist(pageLink))
-    {
-        toRefreshPage = true;
-
-        watchElement.style.border = "2px solid green";
-
-        if (watchElement.textContent <= CHOSEN_PRICE)
-        {
-            watchElement.style.border = "10px solid red";
-
-            var audio = new Audio(browser.extension.getURL("audio/alert.mp3"));
-            audio.play();
-
-            toRefreshPage = true;
-        }        
-    }
-    else
-    { 
-        let watch = confirm("Watch for changes on this page?");
-        if (watch) 
-        {
-            toRefreshPage = true;
-            watchElement.style.border = "2px solid green";
-            setWatchSettings(pageLink, watchElement.innerHTML);
-        }
-    }
-
-    if (toRefreshPage)
-    {
-        console.log("Gonna refresh soon...");
-        setTimeout(refreshPage, refreshDelay - startupDelay);
-    }
-}
-
-function getWatchPage()
-{
-    let watchPage = sessionStorage.getItem("watchpage");
-    console.log(watchPage);
-    return ((watchPage == null) || (watchPage == undefined)) ? null : JSON.parse(watchPage);
-}
-
-function setWatchSettings(page, text)
-{
+function setWatchSettings(page, text) {
     let wp = new PageWatchpoint(page, text);
 
     setWatchPage(wp);
 }
 
-function isThisPageOnAWatchlist(page)
-{
-    let wp = getWatchPage();
-    return (wp == null) ? false : wp.page == page;
+function setWatchPage(watchPage) {
+    sessionStorage.setItem("watchpage", JSON.stringify(watchPage));
 }
 
-function refreshPage()
-{
+function getWatchPage() {
+    let watchPage = sessionStorage.getItem("watchpage");
+    return ((watchPage == null) || (watchPage == undefined)) ? null : JSON.parse(watchPage);
+}
+
+function refreshPage() {
     location.reload();
 }
 
-function setWatchPage(watchPage)
-{
-    sessionStorage.setItem("ISUwatchpage", JSON.stringify(watchPage));
+
+
+// Main block
+setTimeout(main, STARTUP_DELAY);
+
+function main() {
+    let pageLink = window.location.href;
+    let watchElement = 
+                        document.getElementsByClassName("title-3-bold_03dd9f9 mobile-title-3-bold_03dd9f9 ticket-desktop__price")[0]
+                        .getElementsByClassName("price_85d2b9c")[0];
+
+    setWatchSettings(pageLink, watchElement);
+
+    console.log("Unformated price is - " + watchElement.innerText)
+    var price = Number(watchElement.innerText.slice(0, -1).replace(/\s/g,''))
+
+    if (price <= CHOSEN_PRICE) {
+        watchElement.style.border = "10px solid red";
+
+        var audio = new Audio(browser.extension.getURL("audio/alert.mp3"));
+        audio.play();
+    }
+    else {
+        watchElement.style.border = "2px solid green";
+        setTimeout(refreshPage, AWAIT_TIME);
+    }
 }
